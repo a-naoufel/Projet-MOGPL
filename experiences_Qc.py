@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import random
 import time
+import matplotlib.pyplot as plt
 from statistics import mean, stdev
 
 import robot 
@@ -135,6 +136,26 @@ def main():
         else:
             std_ms = 0.0
         print(f"{N:5d}  {moy_ms:12.3f}  {std_ms:16.3f}")
+
+        Ns = sorted(times_by_size.keys())
+    moyennes_ms = []
+    ecarts_ms = []
+
+    for N in Ns:
+        temps = times_by_size[N]
+        moyennes_ms.append(mean(temps) * 1000)
+        if len(temps) > 1:
+            ecarts_ms.append(stdev(temps) * 1000)
+        else:
+            ecarts_ms.append(0.0)
+
+    plt.figure()
+    plt.errorbar(Ns, moyennes_ms, yerr=ecarts_ms, fmt='-o', capsize=5)
+    plt.title("Temps moyen d'exécution BFS selon la taille de la grille N")
+    plt.xlabel("Taille de la grille N")
+    plt.ylabel("Temps moyen (ms)")
+    plt.grid(True)
+    plt.show()
 
     print(f"\nInstances écrites dans : {entree_filename}")
     print(f"Résultats écrits dans : {resultats_filename}")

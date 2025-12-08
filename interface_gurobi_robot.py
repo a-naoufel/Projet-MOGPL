@@ -5,7 +5,7 @@ try:
     import gurobipy as gp
     from gurobipy import GRB
 except ImportError:
-    print("Erreur : le module gurobipy (Gurobi) n'est pas disponible.")
+    print("Erreur : le module gurobipy n'est pas disponible.")
     sys.exit(1)
 
 import robot  
@@ -16,10 +16,6 @@ def build_obstacle_grid_with_gurobi(M, N, P):
     Construit et résout le PL de placement des P obstacles sur une grille de cases MxN
     (indices de cases 0..M-1, 0..N-1), en minimisant la somme des poids w_ij, sous
     les contraintes énoncées dans le sujet.
-
-    Retourne :
-      grid : matrice MxN de 0/1 (1 = obstacle)
-      weights : matrice MxN de poids w_ij
     """
     # Génération des poids aléatoires w_ij
     weights = [[random.randint(0, 1000) for _ in range(N)] for _ in range(M)]
@@ -107,13 +103,13 @@ def print_grid(grid):
 
 
 def main():
-    print("=== Interface Gurobi + BFS (version adaptée à ton bfs) ===")
+    print("Interface Gurobi + BFS")
 
     # Choix de M, N, P
     try:
-        M = int(input("Nombre de lignes de cases M (ex: 20) : "))
-        N = int(input("Nombre de colonnes de cases N (ex: 20) : "))
-        P = int(input("Nombre d'obstacles P (ex: 30) : "))
+        M = int(input("Nombre de lignes de cases M: "))
+        N = int(input("Nombre de colonnes de cases N: "))
+        P = int(input("Nombre d'obstacles P: "))
     except ValueError:
         print("Entrée invalide, il faut des entiers.")
         return
@@ -134,13 +130,6 @@ def main():
 
     print_grid(grid)
 
-    #Choix du départ / arrivée / orientation
-    print("\nRappel important :")
-    print("  - Ton bfs travaille sur des sommets (i,j) dans [0..M] x [0..N].")
-    print("  - vertex_ok interdit i=0, j=0, i=M, j=N.")
-    print("  => il faut donc choisir des sommets strictement intérieurs :")
-    print("     1 <= i <= M-1, 1 <= j <= N-1.")
-    print("  - grid[i_case][j_case] correspond aux cases (0..M-1,0..N-1).")
 
     try:
         D1 = int(input(f"D1 (ligne du sommet de départ, entre 1 et {M-1}) : "))

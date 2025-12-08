@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import random
 import time
+import matplotlib.pyplot as plt
 from statistics import mean, stdev
 
 import robot 
@@ -133,6 +134,18 @@ def main():
         else:
             std_ms = 0.0
         print(f"{P:5d}  {moy_ms:12.3f}  {std_ms:16.3f}")
+        import matplotlib.pyplot as plt
+
+    P_values = sorted(times_by_P)
+    moyennes = [mean(times_by_P[p]) * 1000 for p in P_values]
+
+    plt.figure()
+    plt.plot(P_values, moyennes, marker='o')
+    plt.title("Temps moyen BFS selon le nombre d'obstacles P")
+    plt.xlabel("Nombre d'obstacles P")
+    plt.ylabel("Temps moyen (ms)")
+    plt.grid(True)
+    plt.show()
 
     print(f"\nInstances écrites dans : {entree_filename}")
     print(f"Résultats écrits dans : {resultats_filename}")
