@@ -95,13 +95,12 @@ def main():
     with open(entree_filename, "w") as f_in, open(resultats_filename, "w") as f_out:
         for P in obstacles_list:
             for _ in range(nb_instances):
-                # 1) Génération d'une instance
+                # Génération d'une instance
                 M, N, grid, start, end, orientation = generate_instance(M, N, P)
 
-                # 2) Écriture de l'instance dans le fichier d'entrée
+                # Écriture de l'instance dans le fichier d'entrée
                 write_instance_block(f_in, M, N, grid, start, end, orientation)
-
-                # 3) Lancement de ton BFS et mesure du temps
+                #  Lancement BFS et mesure du temps
                 D1, D2 = start
                 F1, F2 = end
                 start_o = robot.ORI_STR_TO_ID[orientation]
@@ -113,14 +112,14 @@ def main():
                 dt = t1 - t0
                 times_by_P[P].append(dt)
 
-                # 4) Écriture de la ligne de résultat correspondante
+                # Écriture de la ligne de résultat correspondante
                 if cmds is None:
                     f_out.write("-1\n")
                 else:
                     T = len(cmds)
                     f_out.write(str(T) + " " + " ".join(cmds) + "\n")
 
-        # 5) Ligne finale "0 0" pour terminer le fichier d'entrée
+        # Ligne finale "0 0" pour terminer le fichier d'entrée
         f_in.write("0 0\n")
 
     # Affichage des temps moyens (en ms) pour le rapport
@@ -139,8 +138,15 @@ def main():
     P_values = sorted(times_by_P)
     moyennes = [mean(times_by_P[p]) * 1000 for p in P_values]
 
+    ecarts = []
+    for p in P_values:
+        if len(times_by_P[p]) > 1:
+            ecarts.append(stdev(times_by_P[p]) * 1000)
+        else:
+            ecarts.append(0.0)
+
     plt.figure()
-    plt.plot(P_values, moyennes, marker='o')
+    plt.errorbar(P_values, moyennes, yerr=ecarts, fmt='-o', capsize=5)
     plt.title("Temps moyen BFS selon le nombre d'obstacles P")
     plt.xlabel("Nombre d'obstacles P")
     plt.ylabel("Temps moyen (ms)")
