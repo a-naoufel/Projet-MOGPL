@@ -127,7 +127,7 @@ def bfs(grid, start_i, start_j, start_o, goal_i, goal_j):
             found_state = (i, j, o)
             break
 
-        # 1) Rotations gauche et droite
+        # Rotations gauche et droite
         for cmd, delta_o in (("G", -1), ("D", 1)):
             o2 = (o + delta_o) % 4 # nouvelle orientation après rotation, modulo 4 pour rester dans les indices valides cad entre 0 et 3
             if not visited[i][j][o2]:
@@ -135,7 +135,7 @@ def bfs(grid, start_i, start_j, start_o, goal_i, goal_j):
                 parent[i][j][o2] = (i, j, o, cmd)
                 q.append((i, j, o2)) #à partir de position (i,j), on crée 2 nouveaux états correspondant aux 2 orientations possibles après rotation.
 
-        # 2) Avances de 1, 2, 3 cases
+        # Avances de 1, 2, 3 cases
         di, dj = DIRS[o] # vecteur de déplacement selon l'orientation actuelle
         for n in (3, 2, 1): #on utilise cet ordre pour prioriser les grandes avancées
             ok = True
